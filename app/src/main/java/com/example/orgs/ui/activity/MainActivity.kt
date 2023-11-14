@@ -1,45 +1,36 @@
 package com.example.orgs.ui.activity
 
-import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orgs.R
-import com.example.orgs.model.Produto
+import com.example.orgs.dao.ProdutosDao
 import com.example.orgs.ui.recyclerView.ListaProdutosAdapter
-import java.math.BigDecimal
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //val view = TextView(this)
-        //view.setText("Amamos Gatinhos")
-        setContentView(R.layout.activity_main)
         //Toast.makeText(this,"Bem vindo(a) ao Orgs!", Toast.LENGTH_SHORT).show()
-//        val nome = findViewById<TextView>(R.id.nome)
-//        nome.text = "Cesta de Frutas"
-//        val descricao = findViewById<TextView>(R.id.descricao)
-//        descricao.text = "Laranja, manga e maçã"
-//        val valor = findViewById<TextView>(R.id.valor)
-//        valor.text = "19.99"
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.adapter = ListaProdutosAdapter( this, listOf(
-            Produto(nome = "teste",
-                descricao = "teste desc",
-                valor = BigDecimal("19.99")
-            ),
-            Produto(nome = "teste 1",
-                descricao = "teste desc 1",
-                valor = BigDecimal("29.99")
-            ),
-            Produto(nome = "teste 2",
-                descricao = "teste desc 2",
-                valor = BigDecimal("39.99")
-            ),
-        ))
+        val dao = ProdutosDao()
+        Log.i("MainActivity","onCreate:${dao.buscaTodos()}")
 
-        //recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = ListaProdutosAdapter( this, dao.buscaTodos())
+
+        val fab = findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        fab.setOnClickListener{
+            val intent = Intent(this, FormularioProdutoActivity::class.java)
+            startActivity(intent)
+        }
+
 
 
     }
